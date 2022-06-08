@@ -13,7 +13,7 @@ class Home extends CI_Controller {
         $product["productList"] = array("","","","","","","","");
         if(empty($this->session->userdata('order'))) {
             $order = array();
-            for ($x = 0; $x <= count($product["productList"]); $x++) {
+            for ($x = 0; $x <= count($product["productList"])-1; $x++) {
                 $order[$x] = 0;
             }
 
@@ -24,23 +24,86 @@ class Home extends CI_Controller {
         $this->load->view('home',$product);
     }
 
+    public function cartPage(){
+        $this->load->helper('url');
+        $this->load->view('templates/header');
+        $this->load->view('order');
+    }
+
+    public function updateItem(){
+        header('content-type: text/json');
+        if ((!isset($_POST['oid'])) || (!isset($_POST['count']))) {
+            exit;
+        }
+        $order = $this->session->userdata('order');
+        $order[$_POST['oid']] = $_POST['count'];
+        $this->session->set_userdata('order', $order);
+        $total = 0;        
+        $this->session->userdata('orderTotal');
+
+        for($x = 0; count($order) > $x; $x++){
+            if($order[$x] > 0){
+                $total++;
+            }
+        }
+        $orderT = $total;
+        $this->session->set_userdata('orderTotal', $orderT);
+        $status = ($_POST['count']>0)? 1: 0;
+        echo json_encode(array("status"=>$status,"total"=>$total));
+    }
+
+    public function removeItem(){
+        header('content-type: text/json');
+        if (!isset($_POST['oid'])) {
+            exit;
+        }
+        $order = $this->session->userdata('order');
+        $order[$_POST['oid']] = 0;
+        $this->session->set_userdata('order', $order);
+        $total = 0;        
+        $this->session->userdata('orderTotal');
+        for($x = 0; count($order) > $x; $x++){
+            if($order[$x] > 0){
+                $total++;
+            }
+        }
+        $orderT = $total;
+        $this->session->set_userdata('orderTotal', $orderT);
+        echo json_encode(array("status"=>0,"total"=>$total));
+    }
+
     public function placeOrder() {
         header('content-type: text/json');
         if (!isset($_POST['pid']) || !isset($_POST['bs'])) {
             exit;
         }
+        $total = 0;
         $bs = $_POST['bs'];
         $order = $this->session->userdata('order');
-        if($bs == "1") {
+        if($bs > 0) {
             $bs = 0;
         } else {
             $bs = 1;
         }
-
         $order[$_POST['pid']] = $bs;
         $this->session->set_userdata('order', $order);
+
+        $this->session->userdata('orderTotal');
+
+        for($x = 0; count($order) > $x; $x++){
+            if($order[$x] == 1){
+                $total++;
+            }
+        }
+        $orderT = $total;
+        $this->session->set_userdata('orderTotal', $orderT);
         
 
-        echo json_encode($bs);
+        echo json_encode(array("status"=>$bs,"total"=>$total));
+    }
+
+    public function resetOrder(){
+        session_unset();
+        session_destroy();
     }
 }
