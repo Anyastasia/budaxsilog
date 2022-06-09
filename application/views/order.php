@@ -21,7 +21,7 @@ $orderTotal = $this->session->userdata('orderTotal');
     <div id="menu">
         <div>
             <?php
-                for($x=0;$x<count($order)-1;$x++){
+                for($x=0;$x<count($order);$x++){
                     if($order[$x] > 0){
                         $temp = $x+1;
                         echo '<div id="Item'.$x.'">';
