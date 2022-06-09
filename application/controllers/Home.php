@@ -5,12 +5,22 @@ class Home extends CI_Controller {
         parent::__construct();
         $this->load->helper('url');
         $this->load->library('session');
+        $this->load->model('Product', 'product');
+        
     }
+
+    // public function try() {
+    //     $data['arr'] = $this->product->getProduct();
+    //     print_r($data);
+    //     $this->load->view('try' ,$data);
+    // }
 
     public function index() {
         $this->load->helper('url');
         $this->load->view('templates/header');
-        $product["productList"] = array("","","","","","","","");
+
+        //$product["productList"] = array("","","","","","","","");
+        $product["productList"] = $this->product->getProduct();
         if(empty($this->session->userdata('order'))) {
             $order = array();
             for ($x = 0; $x <= count($product["productList"])-1; $x++) {

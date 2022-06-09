@@ -28,13 +28,13 @@ $orderTotal = $this->session->userdata('orderTotal');
                 <input type="number" id="bannerStatus<?=$xx;?>" value=<?=$order[$xx]?> hidden>
                 <!-- image placeholder -->
                 <?php if($order[$xx] > 0){?>
-                    <img class="orderClick" style="transition: opacity .5s; opacity: 0.5;" id="bannerImg<?=$xx;?>" src="<?= $x['image_path'];?>" alt="">
+                    <img class="orderClick" style="transition: opacity .5s; opacity: 0.5;" id="bannerImg<?=$xx;?>" src="<?= base_url('imgs/BaTKgtJF_4x.jpg');?>" alt="">
                 <?php } else {?>
-                    <img class="orderClick" style="transition: opacity .5s; opacity: 1;" id="bannerImg<?=$xx;?>" src="<?= $x['image_path'];?>" alt="">
+                    <img class="orderClick" style="transition: opacity .5s; opacity: 1;" id="bannerImg<?=$xx;?>" src="<?= base_url('imgs/BaTKgtJF_4x.jpg');?>" alt="">
                 <?php }?>
                 <div class="xcard-details">
-                    <p class='xcard-title'><?= $x['productName']?></p>
-                    <p class='xcard-price mb-0'>&#8369 <?= $x['price']?></p>
+                    <p class='xcard-title'>chixsilog</p>
+                    <p class='xcard-price mb-0'>&#8369 80</p>
                 </div>
             </div>
         <?php $xx++; }?>
