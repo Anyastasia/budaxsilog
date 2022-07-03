@@ -35,6 +35,11 @@ class Home extends CI_Controller {
     }
 
     public function cartPage(){
+        if ((!isset($_POST['oid'])) || (!isset($_POST['count']))) {
+            echo '<style>body {bakground-color: rgb(55, 50, 62);}</style>';
+            echo '<script>if (confirm("\nPlease select an item from the homepage.\n\nThank you...")) {location.href = "'.base_url('home').'";} else {location.href = "'.base_url('home').'";}</script>';
+            exit;
+        }
         $this->load->helper('url');
         $this->load->view('templates/header');
         $product["productList"] = $this->product->getProduct();
@@ -81,6 +86,44 @@ class Home extends CI_Controller {
         $orderT = $total;
         $this->session->set_userdata('orderTotal', $orderT);
         echo json_encode(array("status"=>0,"total"=>$total));
+    }
+
+
+    public function checkoutOrder(){
+        echo $_POST["name"]."<br>";
+        echo $_POST["cnum"]."<br>";
+        echo $_POST["loc"]."<br>";
+        echo $_POST["modePayment"]."<br>";
+        $order = $this->session->userdata('order');
+        //===== random code ======
+        $length = 10;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        $code = $randomString;
+        $temp_order = array();
+        for($x = 0; $x < count($order); $x++){
+            array_push($temp_order,strval($x)."=".strval($order[$x]));
+        }
+        $fOrder = implode(",",$temp_order);
+        $this->product->checkOutProduct($_POST["name"], $_POST["cnum"], $_POST["loc"], $_POST["modePayment"], $fOrder, $code);
+        session_unset();
+        session_destroy();
+        redirect(base_url('home'));
+    }
+
+    public function checker() {
+        header('content-type: text/json');
+        $status = 1;
+        if (isset($_POST["number"])){
+            $status = 0;
+            print($_POST["number"]);
+        }
+
+        echo json_encode($status);
     }
 
     public function placeOrder() {
