@@ -35,13 +35,23 @@ class Home extends CI_Controller {
     }
 
     public function cartPage(){
-        if ((!isset($_POST['oid'])) || (!isset($_POST['count']))) {
+        $this->load->helper('url');
+        $this->load->view('templates/header');
+        $order = $this->session->userdata('order');
+        $status = 0;
+        for($x = 0; $x < count($order); $x++){
+            if($order[$x] != 0){
+                $status = 1;
+            }
+        }
+
+        if ($status == 0) {
+            session_unset();
+            session_destroy();
             echo '<style>body {bakground-color: rgb(55, 50, 62);}</style>';
             echo '<script>if (confirm("\nPlease select an item from the homepage.\n\nThank you...")) {location.href = "'.base_url('home').'";} else {location.href = "'.base_url('home').'";}</script>';
             exit;
         }
-        $this->load->helper('url');
-        $this->load->view('templates/header');
         $product["productList"] = $this->product->getProduct();
         $this->load->view('order',$product);
     }
