@@ -37,7 +37,8 @@ class Home extends CI_Controller {
     public function cartPage(){
         $this->load->helper('url');
         $this->load->view('templates/header');
-        $this->load->view('order');
+        $product["productList"] = $this->product->getProduct();
+        $this->load->view('order',$product);
     }
 
     public function updateItem(){
