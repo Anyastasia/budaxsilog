@@ -46,6 +46,11 @@ img {
     width: 100%;
 }
 
+input[type="password"] {
+    border-radius: var(--border-radius);
+    margin: 1rem;
+}
+
 #header {
     background-color: var(--secondary);
     color: var(--white);
@@ -139,6 +144,10 @@ img {
 
 .v-100 {
     height: 100vh;
+}
+
+.w-100 {
+    width: 100%;  
 }
 
 .w-40 {

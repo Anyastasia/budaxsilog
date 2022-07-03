@@ -4,6 +4,9 @@
             <form action="admin-login.php">
                 <p>Enter password</p>
                 <input type="password" name="password" id="password">
+                <div class="my-2">
+                    <button type="submit" class="secondary w-100">Log in</button>
+                </div>
             </form>
         </div>
     </div>
