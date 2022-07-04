@@ -85,73 +85,80 @@ $orderTotal = $this->session->userdata('orderTotal');
 
     <div id="menu">
         <div class="container">
-            <div class="row">
-                <div class="col" style="width: 50%;">
-                    <div style="  border-radius: 5px;background-color: #f2f2f2;padding: 20px; color: black;">
-                        <label for="fname">Name</label>
-                        <input type="text" id="name" name="firstname" placeholder="Your name..">
+            <form action='<?=base_url('checkoutOrder');?>' method="POST">
+                <div class="row">
+                    <div class="col" style="width: 50%;">
+                        <div style="  border-radius: 5px;background-color: #f2f2f2;padding: 20px; color: black;">
+                            <label for="fname">Name</label>
+                            <input type="text" id="name" name="name" placeholder="Your name.." required>
 
-                        <label for="lname">Contact Number</label>
-                        <input type="text" id="cnum" name="lastname" placeholder="(+639)">
+                            <label for="lname">Contact Number</label>
+                            <input type="text" id="cnum" name="cnum" placeholder="(+639)" required>
 
-                        <label for="lname">Address</label>
-                        <input type="text" id="loc" name="lastname" placeholder="Where to drop off...">
-                        <textarea placeholder="Addition Description..."></textarea>
-                        <label for="modePayment">Mode of Payment</label>
-                        <select id="modePayment" onchange="checkUser()" name="modePayment">
-                            <option value="gcash">Gcash</option>
-                            <option value="cod">Cash on Delivery</option>
-                        </select>
+                            <label for="lname">Address</label>
+                            <input type="text" id="loc" name="loc" placeholder="Where to drop off..." required>
+                            <textarea placeholder="Addition Description..."></textarea>
+                            <label for="modePayment">Mode of Payment</label>
+                            <select id="modePayment" onchange="checkUser()" name="modePayment">
+                                <option value="0">Gcash</option>
+                                <option value="1">Cash on Delivery</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col" style="min-width:636px; max-height: 550px; overflow-y:scroll;">
-                    <?php
-                        for($x=0;$x<count($order);$x++){
-                            if($order[$x] > 0){
-                                $temp = $x+1;
-                    ?>
-                            <div class="container" id="Item<?=$x?>">
-                                <div class="row">
-                                    <div class="col">
-                                        <img style="width:100px; height:100px;" src="<?=$productList[$x]['image_path'];?>">
-                                    </div>
-                                    <div class="col" style="padding-top: 50px;">
-                                        <h5><?=ucfirst($productList[$x]['productName']);?> </h5>
-                                    </div>
-                                    <div class="col" style="padding-top: 50px;">
-                                        <div style="display: flex;align-items: center;justify-content: center;flex-direction: column;">
-                                            <div style="display: flex;align-items: center;">
-                                                <button class="quantity" onclick="vol(0,<?=$x;?>)">-</button>
-                                                <input class="quantity" style="width: 50px;height: 32px;border-left: 0;border-right: 0;font-size: 16px;font-weight: 400;box-sizing: border-box;text-align: center;" id="num<?=$x;?>" type="number" id="order<?=$x;?>" value="<?=$order[$x];?>" onchange="updateAmount(<?=$x;?>,this.value)">
-                                                <button class="quantity" onclick="vol(1,<?=$x;?>)">+</button>
+                    <div class="col" style="min-width:636px; max-height: 550px; overflow-y:scroll;">
+                        <?php
+                            for($x=0;$x<count($order);$x++){
+                                if($order[$x] > 0){
+                                    $temp = $x+1;
+                        ?>
+                                <div class="container" id="Item<?=$x?>">
+                                    <div class="row">
+                                        <div class="col">
+                                            <img style="width:100px; height:100px;" src="<?=$productList[$x]['image_path'];?>">
+                                        </div>
+                                        <div class="col" style="height:100px;">
+                                            <h5><?=ucfirst($productList[$x]['productName']);?> </h5>
+                                        </div>
+                                        <div class="col" style="padding-top: 50px;">
+                                            <div style="display: flex;align-items: center;justify-content: center;flex-direction: column;">
+                                                <div style="display: flex;align-items: center;">
+                                                    <button type="button" class="quantity" onclick="vol(0,<?=$x;?>)">-</button>
+                                                    <input class="quantity" style="width: 50px;height: 32px;border-left: 0;border-right: 0;font-size: 16px;font-weight: 400;box-sizing: border-box;text-align: center;" id="num<?=$x;?>" type="number" id="order<?=$x;?>" value="<?=$order[$x];?>" onchange="updateAmount(<?=$x;?>,this.value)">
+                                                    <button type="button" class="quantity" onclick="vol(1,<?=$x;?>)">+</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col" style="padding-top: 50px;">
-                                        <button onclick="removeItem(<?=$x;?>)">remove</button>
+                                        <div class="col" style="padding-top: 50px;">
+                                            <button onclick="removeItem(<?=$x;?>)">remove</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                    <?php
+                        <?php
+                                }
                             }
-                        }
-                    ?>
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <div style="position: fixed; left: 0%; bottom: 0%; right: 0%;">
-                <div style="float: right;"><button class="btnSubmit" type="button" onclick="submit()">Order</button></div>
-            </div>
+                <div style="position: fixed; bottom: 0%; right: 0%;">
+                    <div style="float: right;"><button class="btnSubmit" type="submit">Order</button></div>
+                </div>
+            </form>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script>
-        function submit(){
-
-        }
 
         function checkUser(){
-            document.getElementById("modePayment").value = "gcash";
-            alert("Cannot apply mode of payment.\n\nTo verify the authenticity of our customer, only address with delivery history can apply this feature. ");
+            loc = document.getElementById("cnum").value;
+            num = document.getElementById("loc").value;
+            $.post('<?=base_url('checker');?>', {location: loc, number: num}, function(data){
+                if(data == "0"){
+                    alert("nuys");
+                }else{
+                    alert("Cannot apply mode of payment.\n\nTo verify the authenticity of our customer, only address with delivery history can apply this feature. ");
+                    document.getElementById("modePayment").value = "gcash";
+                }
+            }, 'JSON');
         }
 
         function vol(type,id){
