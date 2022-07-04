@@ -93,6 +93,14 @@ $orderTotal = $this->session->userdata('orderTotal');
         background-color: rgba(50,50,50,.8);
     }
 
+    .cancelBtn {
+        position: absolute; bottom: 10%; left: 5%; border: solid 1px; border-color: rgb(150,150,150);
+    }
+    .cancelBtn:hover {
+        background-color: rgb(150,150,150);
+        color: white;
+    }
+
 </style>
 
 <body>    
@@ -105,7 +113,7 @@ $orderTotal = $this->session->userdata('orderTotal');
             <div class="collapse navbar-collapse" id="collapseNav">
                 <ul class="navbar-nav ms-auto">
                 <li class="nav-item header-item"><a href="<?=base_url('Cart');?>">Order <label id="orderCount"><?= ($orderTotal > 0) ? $orderTotal : "";?></label></a></li>
-                    <li class="nav-item header-item"><a href="#">Status</a></li>
+                    <li class="nav-item header-item"><a href="status">Status</a></li>
                 </ul>
             </div>
         </div>
@@ -115,7 +123,13 @@ $orderTotal = $this->session->userdata('orderTotal');
         <div class="container">
             <form action='<?=base_url('checkoutOrder');?>' method="POST">
                 <div id="checkContainer" style="display: none;">
-                    <div id="orderCheck"><button class="btnSubmit" type="submit" style="position: absolute; bottom: 10%; right: 5%;">Order</button></div>
+                    <div id="orderCheck" style="align-items: center;justify-content: center;display: flex;flex-direction: column;">
+                        <div id="hideCode" style="align-items: center;justify-content: center;display: flex;flex-direction: column;">
+                            <h3 style="color: black;">Confirm order?</h3>
+                        </div>
+                        <button class="cancelBtn" type="button" onclick="document.getElementById('checkContainer').style.display = 'none';">Cancel</button>
+                        <button class="btnSubmit" type="submit" onclick="document.getElementById('checkContainer').style.display = 'none';" style="position: absolute; bottom: 10%; right: 5%;">Order</button>
+                    </div>
                     <div id="bgCheck" style="cursor: pointer;" onclick="document.getElementById('checkContainer').style.display = 'none';"></div>
                 </div>
                 <div class="row">
@@ -141,11 +155,13 @@ $orderTotal = $this->session->userdata('orderTotal');
                     <div class="col" style="position: relative; min-width:436px; max-height: 550px;">
                         <div class="container" style="overflow-y:scroll; height: 100%; max-height: 490px;">
                             <?php
+                                $color = 0;
                                 for($x=0;$x<count($order);$x++){
                                     if($order[$x] > 0){
                                         $temp = $x+1;
+                                        $color++;
                             ?>
-                                    <div class="row"  id="Item<?=$x?>" style="padding: 10px 0px; background-color:<?php if($x%2==0){echo'rgba(150,150,150,.8)';}else{echo'rgba(100,100,100,.8)';}?>;">
+                                    <div class="row"  id="Item<?=$x?>" style="padding: 10px 0px; background-color:<?php if($color%2==1){echo'rgba(150,150,150,.8)';}else{echo'rgba(100,100,100,.8)';}?>;">
                                         <div class="col">
                                             <img style="width:100px; height:100px;" src="<?=$productList[$x]['image_path'];?>">
                                         </div>
@@ -162,7 +178,7 @@ $orderTotal = $this->session->userdata('orderTotal');
                                             </div>
                                         </div>
                                         <div class="col" style="align-items: center;justify-content: center;display: flex;flex-direction: column;">
-                                            <button onclick="removeItem(<?=$x;?>)">remove</button>
+                                            <button type="button" onclick="removeItem(<?=$x;?>)">remove</button>
                                         </div>
                                     </div>
                             <?php
@@ -187,16 +203,18 @@ $orderTotal = $this->session->userdata('orderTotal');
             num = document.getElementById("cnum");
             type = document.getElementById("modePayment").value;
 
-            if(num.value != "" && loc.value != "") {
-                $.post('<?=base_url('checker');?>', {location: loc.value, number: num.value}, function(data){
-                    if(data || type == "0"){
-                        alert("Payment method accepted");
-                    }else{
-                        console.log(num)
-                        alert("Cannot apply mode of payment.\n\nTo verify the authenticity of our customer, only address with delivery history can apply this feature. ");
-                        backToDefault();
-                    }
-                }, 'JSON');
+            if(num.value != "" && loc.value != "" ) {
+                if (type == "1") {
+                    $.post('<?=base_url('checker');?>', {location: loc.value, number: num.value}, function(data){
+                        if(data){
+                            alert("Payment method accepted");
+                        }else{
+                            console.log(num)
+                            alert("Cannot apply mode of payment.\n\nTo verify the authenticity of our customer, only address with delivery history can apply this feature. ");
+                            backToDefault();
+                        }
+                    }, 'JSON');
+                }
             } else {
                 alert("fill up the Contact Number and Address information\nbefore choosing mode of payment.");
                 backToDefault();

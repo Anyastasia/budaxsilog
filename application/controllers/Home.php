@@ -35,14 +35,23 @@ class Home extends CI_Controller {
         $this->load->view('home',$product);
     }
 
+    public function status(){
+        $this->load->helper('url');
+        $this->load->view('templates/header');
+        $code = $this->session->userdata('codeC');
+        $this->load->view('status');
+    }
+
     public function cartPage(){
         $this->load->helper('url');
         $this->load->view('templates/header');
         $order = $this->session->userdata('order');
         $status = 0;
-        for($x = 0; $x < count($order); $x++){
-            if($order[$x] != 0){
-                $status = 1;
+        if(isset($order)) {
+            for($x = 0; $x < count($order); $x++) {
+                if($order[$x] != 0) {
+                    $status = 1;
+                }
             }
         }
 
@@ -101,6 +110,7 @@ class Home extends CI_Controller {
 
 
     public function checkoutOrder(){
+        header('content-type: text/json');
         echo $_POST["name"]."<br>";
         echo $_POST["cnum"]."<br>";
         echo $_POST["loc"]."<br>";
@@ -116,9 +126,21 @@ class Home extends CI_Controller {
         }
         $fOrder = implode(",",$temp_order);
         $this->product->checkOutProduct($_POST["name"], $_POST["cnum"], $_POST["loc"], $_POST["modePayment"], $fOrder, $code);
+        $codeC = $this->session->userdata('codeC');
+        $codeC = $code;
+        $this->session->set_userdata('codeC', $codeC);
+        redirect(base_url('status'));
+    }
+
+    public function cancelOrder(){
+        header('content-type: text/json');
+        if(!isset($_POST["codeC"])){
+            exit;
+        }
+        $status = $this->orders->cancelOrderM($_POST["codeC"]);
         session_unset();
         session_destroy();
-        redirect(base_url('home'));
+        echo json_encode($status > 0);
     }
 
     public function checker(){
@@ -129,6 +151,14 @@ class Home extends CI_Controller {
             $status = 0;
         }
         echo json_encode($status > 0);
+    }
+
+    public function statusCheck(){
+        header('content-type: text/json');
+        if(isset($_POST["codeC"])) {
+            $status = $this->orders->checkStatus($_POST["codeC"]);
+        }
+        echo json_encode(array("modeOfPayment" => $status[0]["modeOfPayment"], "orderStatus" => $status[0]["orderStatus"]));
     }
 
     public function placeOrder() {
