@@ -10,7 +10,6 @@
     <div class="container v-100 flex flex-center">
         <div class="w-40">
             <?= form_open("admin/login"); ?>
-            <form action="login.php">
                 <p>Enter password</p>
                 <?= form_password(array("id" => "password", "name" => "password")); ?>
                 <div class="my-2">

@@ -8,6 +8,11 @@ class Product extends CI_Model {
         return $query->result_array();
     }
 
+    public function getActiveProduct() {
+        $query = $this->db->get_where($this->table, array("status" => "active"));
+        return $query->result_array();
+    }
+
     public function getProductName() {
         $this->db->select('productName');
         $query = $this->db->get($this->table);
@@ -25,5 +30,14 @@ class Product extends CI_Model {
     );
     
     $this->db->insert('orders', $data);
+    }
+
+    public function updateProductStatus($pid) {
+        $query = $this->db->get_where($this->table, array("productID" => $pid));
+        $row = $query->row();
+        $updateID = ($row->status == "active") ? "deactivated" : "active";
+        $data = array("status" => $updateID);
+        $this->db->where('productID', $pid);
+        $this->db->update($this->table, $data);
     }
 }

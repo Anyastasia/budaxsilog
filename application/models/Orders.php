@@ -53,4 +53,14 @@ class Orders extends CI_Model {
         }
         return $status;
     }
+    
+    public function getOrderPending() {
+        $query = $this->db->get_where($this->table, array("orderStatus" => 0));
+        return $query->result_array();
+    }
+
+    public function getPaymentPending() {
+        $query = $this->db->get_where($this->table, array("paymentStatus" => 0));
+        return $query->result_array();
+    }
 }

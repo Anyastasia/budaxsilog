@@ -21,7 +21,7 @@ class Home extends CI_Controller {
         $this->load->view('templates/header');
 
         //$product["productList"] = array("","","","","","","","");
-        $product["productList"] = $this->product->getProduct();
+        $product["productList"] = $this->product->getActiveProduct();
         if(empty($this->session->userdata('order'))) {
             $order = array();
             for ($x = 0; $x <= count($product["productList"])-1; $x++) {
