@@ -17,7 +17,19 @@ class Orders extends CI_Model {
     */
 
 
-    public function getOrderByStatus($flag = 0) {
+    // public function getOrderByStatus($flag = 0) {
         
+    // }
+
+    public function checkOrderHistory($num, $loc){
+        $query = 0;
+        if(isset($num) && isset($loc)){
+            $this->db->where('contactNumber',$num);
+            $this->db->where('orderStatus',4);
+            $this->db->or_where('address',$loc);
+            $this->db->where('orderStatus',4);
+            $query = $this->db->get('orders');
+        }
+        return $query->num_rows();
     }
 }

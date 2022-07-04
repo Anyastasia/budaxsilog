@@ -24,7 +24,7 @@ $orderTotal = $this->session->userdata('orderTotal');
       </div>
     </div>
     <div class="row container-fluid">
-      <div class="col-3">
+      <div class="col-4" style="min-width: 500px;">
         <div class="slideshow-container">
           <div class="mySlides fade">
             <div class="numbertext">1 / 3</div>
@@ -51,7 +51,7 @@ $orderTotal = $this->session->userdata('orderTotal');
           <span class="dot"></span> 
         </div>
       </div>
-      <div class="col-9">
+      <div class="col-8" style="min-width: 640px;">
         <div id="menu">
           <?php $xx = 0; foreach($productList as $x){ ?>
               <?php if($order[$xx] > 0){?>

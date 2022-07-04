@@ -7,6 +7,7 @@ img {vertical-align: middle;}
 .slideshow-container {
   max-width: 1000px;
   max-height: 1000px;
+  width: 500px;
   position: relative;
   margin: 2rem 0rem 0rem 3rem;
 }
@@ -65,8 +66,8 @@ img {vertical-align: middle;}
 
 /* ---------------------------------------- */
 .logo{
-    height: 500px;
-    width: 500px;
+    max-height: 500px;
+    max-width: 500px;
 }
 .center {
     display: block;
@@ -74,7 +75,7 @@ img {vertical-align: middle;}
     margin-right: auto;
 }
 .row1{
-    padding: 2em 20em 2em;
+    padding: 2em 10em 2em;
 }
 .background{
     background-color: white;

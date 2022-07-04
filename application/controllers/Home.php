@@ -6,6 +6,7 @@ class Home extends CI_Controller {
         $this->load->helper('url');
         $this->load->library('session');
         $this->load->model('Product', 'product');
+        $this->load->model('Orders', 'orders');
         
     }
 
@@ -106,14 +107,9 @@ class Home extends CI_Controller {
         echo $_POST["modePayment"]."<br>";
         $order = $this->session->userdata('order');
         //===== random code ======
-        $length = 10;
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        $code = $randomString;
+        $code = $characters[rand(0, $charactersLength - 1)].date("m").$characters[rand(0, $charactersLength - 1)].date("d").$characters[rand(0, $charactersLength - 1)].date("Y").$characters[rand(0, $charactersLength - 1)].date("h").date("i");
         $temp_order = array();
         for($x = 0; $x < count($order); $x++){
             array_push($temp_order,strval($x)."=".strval($order[$x]));
@@ -125,15 +121,14 @@ class Home extends CI_Controller {
         redirect(base_url('home'));
     }
 
-    public function checker() {
+    public function checker(){
         header('content-type: text/json');
-        $status = 1;
-        if (isset($_POST["number"])){
+        if(isset($_POST["number"]) || isset($_POST["location"])) {
+            $status = $this->orders->checkOrderHistory($_POST["number"],$_POST["location"]);
+        } else {
             $status = 0;
-            print($_POST["number"]);
         }
-
-        echo json_encode($status);
+        echo json_encode($status > 0);
     }
 
     public function placeOrder() {
