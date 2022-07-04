@@ -7,6 +7,12 @@ class Product extends CI_Model {
         $query = $this->db->get($this->table);
         return $query->result_array();
     }
+
+    public function getProductName() {
+        $this->db->select('productName');
+        $query = $this->db->get($this->table);
+        return $query->result_array();
+    }
     
     public function checkOutProduct($name, $cnum, $loc, $modePayment, $order, $code) {
     $data = array(

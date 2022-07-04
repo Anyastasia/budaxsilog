@@ -1,9 +1,18 @@
 <body>
+    <?php if ($this->session->flashdata("invalid_password")) { ?>
+            <div class="alert alert-danger" role="alert"><?= $this->session->flashdata("invalid_password") ?></div>
+    <?php }  ?>
+
+    <?php if ($this->session->flashdata("logged_out")){ ?>
+            <div class="alert alert-success" role="alert"><?= $this->session->flashdata("logged_out") ?></div>
+    <?php } ?>
+    
     <div class="container v-100 flex flex-center">
         <div class="w-40">
-            <form action="admin-login.php">
+            <?= form_open("admin/login"); ?>
+            <form action="login.php">
                 <p>Enter password</p>
-                <input type="password" name="password" id="password">
+                <?= form_password(array("id" => "password", "name" => "password")); ?>
                 <div class="my-2">
                     <button type="submit" class="secondary w-100">Log in</button>
                 </div>
