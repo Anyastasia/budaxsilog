@@ -4,7 +4,7 @@ class Productlist extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->helper("url");
+        $this->load->helper(["url", "form"]);
         $this->load->library('session');
         $this->load->model('Product', 'product');  
     }
@@ -17,6 +17,12 @@ class Productlist extends CI_Controller {
 
     public function add_product() {
 
+    }
+
+    public function toggle() {
+        $pid =  $this->input->post('productToggle');
+        $this->product->updateProductStatus($pid);
+        redirect('/productlist/', 'refresh');
     }
 
 

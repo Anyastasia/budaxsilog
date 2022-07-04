@@ -48,7 +48,8 @@ img {
 
 input[type="password"] {
     border-radius: var(--border-radius);
-    margin: 1rem;
+    padding-block: 0.50rem;
+    padding-inline: 0.75rem;
 }
 
 #header {

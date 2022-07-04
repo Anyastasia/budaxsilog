@@ -34,16 +34,21 @@
                 </thead>
                 <tbody>
                     <?php foreach($productList as $product){?>
+                        <?= form_open('toggle') ?>
                         <tr class="align-middle">
                             <td class="text-white"><?= $product["productID"]; ?> </td>
                             <td class="text-white"><?= ucwords($product["productName"]); ?></td>
                             <td class="text-white"><?= $product["status"]; ?></td>
                             <td <?php if($product["status"] == "active"){ ?> >
-                                <button>Deactivate</button> 
+                                <button type="submit" name="productToggle" value="<?= $product["productID"]?>">Deactivate</button>
+                            </td>
                             <?php } else { ?>
-                                <button>Activate</button>
+                            <td>
+                                <button type="submit" name="productToggle" value="<?= $product["productID"]?>">Activate</button>
                             <?php } ?>
+                            </td>
                         </tr>
+                        <?= form_close() ?>
                     <?php }?>
                 </tbody>
 
@@ -51,3 +56,8 @@
         </div>
     </div>
 </body>
+
+<script>
+
+
+</script>

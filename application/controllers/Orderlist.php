@@ -9,10 +9,21 @@ class Orderlist extends CI_Controller {
         $this->load->model('Product', 'product');
     }
 
-    public function index() {
+    public function index($flag = 0) {
         $this->load->view('templates/header');
+        $arr["orderList"] = array();
+        switch ($flag) {
+            case 1:
+                $arr["orderList"] = $this->orders->getOrderPending();
+                break;
+            case 2:
+                $arr["orderList"] = $this->orders->getPaymentPending();
+                break;
+            default:
+                $arr["orderList"] = $this->orders->getOrders();
+                break;
+        }
         $arr['productList'] = $this->product->getProductName();
-        $arr["orderList"] = $this->orders->getOrders();
         $this->load->view('orderlist', $arr);
     }
 }

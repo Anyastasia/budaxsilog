@@ -54,5 +54,7 @@ $route['Cart'] = 'home/cartPage';
 $route['PlaceOrder'] = 'home/placeOrder';
 $route['checker'] = 'home/checker';
 $route['checkoutOrder'] = 'home/checkoutOrder';
+$route['orderlist/(:num)'] = 'orderlist/index/$1';
+$route['toggle'] = 'productlist/toggle';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
