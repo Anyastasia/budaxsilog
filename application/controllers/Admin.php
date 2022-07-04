@@ -31,17 +31,17 @@ class Admin extends CI_Controller {
         if (strcmp($password, $validation_password) == 0) {
             // password is correct
             $this->session->set_userdata("logged_in", TRUE);
-            redirect("admin", "refresh");
+            redirect(base_url("admin"), "refresh");
         } else {
             $this->session->set_flashdata("invalid_password", "Invalid Password.");
-            redirect("admin", "refresh");
+            redirect(base_url("admin"), "refresh");
         }
     }
 
     public function logout() {
         $this->session->unset_userdata("logged_in");
         $this->session->set_flashdata("logged_out", "Logged out.");
-        redirect("admin", "refresh");
+        redirect(base_url("admin"), "refresh");
     }
 
     

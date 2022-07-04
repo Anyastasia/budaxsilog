@@ -92,7 +92,7 @@ input[type="password"] {
 #menu {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 1rem 2rem;
+    gap: 1rem 1rem;
     margin-block-start: 2rem;
     padding-inline: 2rem;
 }

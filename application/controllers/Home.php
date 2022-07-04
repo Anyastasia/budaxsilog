@@ -6,6 +6,7 @@ class Home extends CI_Controller {
         $this->load->helper('url');
         $this->load->library('session');
         $this->load->model('Product', 'product');
+        $this->load->model('Orders', 'orders');
         
     }
 
@@ -34,14 +35,23 @@ class Home extends CI_Controller {
         $this->load->view('home',$product);
     }
 
+    public function status(){
+        $this->load->helper('url');
+        $this->load->view('templates/header');
+        $code = $this->session->userdata('codeC');
+        $this->load->view('status');
+    }
+
     public function cartPage(){
         $this->load->helper('url');
         $this->load->view('templates/header');
         $order = $this->session->userdata('order');
         $status = 0;
-        for($x = 0; $x < count($order); $x++){
-            if($order[$x] != 0){
-                $status = 1;
+        if(isset($order)) {
+            for($x = 0; $x < count($order); $x++) {
+                if($order[$x] != 0) {
+                    $status = 1;
+                }
             }
         }
 
@@ -100,40 +110,55 @@ class Home extends CI_Controller {
 
 
     public function checkoutOrder(){
+        header('content-type: text/json');
         echo $_POST["name"]."<br>";
         echo $_POST["cnum"]."<br>";
         echo $_POST["loc"]."<br>";
         echo $_POST["modePayment"]."<br>";
         $order = $this->session->userdata('order');
         //===== random code ======
-        $length = 10;
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        $code = $randomString;
+        $code = $characters[rand(0, $charactersLength - 1)].date("m").$characters[rand(0, $charactersLength - 1)].date("d").$characters[rand(0, $charactersLength - 1)].date("Y").$characters[rand(0, $charactersLength - 1)].date("h").date("i");
         $temp_order = array();
         for($x = 0; $x < count($order); $x++){
             array_push($temp_order,strval($x)."=".strval($order[$x]));
         }
         $fOrder = implode(",",$temp_order);
         $this->product->checkOutProduct($_POST["name"], $_POST["cnum"], $_POST["loc"], $_POST["modePayment"], $fOrder, $code);
-        session_unset();
-        session_destroy();
-        redirect(base_url('home'));
+        $codeC = $this->session->userdata('codeC');
+        $codeC = $code;
+        $this->session->set_userdata('codeC', $codeC);
+        redirect(base_url('status'));
     }
 
-    public function checker() {
+    public function cancelOrder(){
         header('content-type: text/json');
-        $status = 1;
-        if (isset($_POST["number"])){
-            $status = 0;
-            print($_POST["number"]);
+        if(!isset($_POST["codeC"])){
+            exit;
         }
+        $status = $this->orders->cancelOrderM($_POST["codeC"]);
+        session_unset();
+        session_destroy();
+        echo json_encode($status > 0);
+    }
 
-        echo json_encode($status);
+    public function checker(){
+        header('content-type: text/json');
+        if(isset($_POST["number"]) || isset($_POST["location"])) {
+            $status = $this->orders->checkOrderHistory($_POST["number"],$_POST["location"]);
+        } else {
+            $status = 0;
+        }
+        echo json_encode($status > 0);
+    }
+
+    public function statusCheck(){
+        header('content-type: text/json');
+        if(isset($_POST["codeC"])) {
+            $status = $this->orders->checkStatus($_POST["codeC"]);
+        }
+        echo json_encode(array("modeOfPayment" => $status[0]["modeOfPayment"], "orderStatus" => $status[0]["orderStatus"]));
     }
 
     public function placeOrder() {
