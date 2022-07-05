@@ -21,6 +21,15 @@ class Orders extends CI_Model {
         
     // }
 
+    public function updateOrderStatus($customerID, $flag) {
+            $query = $this->db->get_where($this->table, array("customerID" => $customerID));
+            $row = $query->row();
+            $flag;
+            $this->db->where('customerID', $customerID);
+            $this->db->update($this->table, array("orderStatus" => $flag));
+
+    }
+
     public function checkOrderHistory($num, $loc){
         $query = 0;
         if(isset($num) && isset($loc)){
@@ -55,12 +64,26 @@ class Orders extends CI_Model {
     }
     
     public function getOrderPending() {
-        $query = $this->db->get_where($this->table, array("orderStatus" => 0));
+        $query = $this->db->where("orderStatus", NULL);
+        $query = $this->db->or_where("orderStatus", 1);
+        $query = $this->db->or_where("orderStatus", 2);
+        $query = $this->db->or_where("orderStatus", 3);
+        $query = $this->db->get($this->table);
         return $query->result_array();
     }
 
-    public function getPaymentPending() {
-        $query = $this->db->get_where($this->table, array("paymentStatus" => 0));
+    public function getOrderAccepted() {
+        $query = $this->db->get_where($this->table, array("orderStatus" => 1));
+        return $query->result_array();
+    }
+
+    public function getOrderDelivered() {
+        $query = $this->db->get_where($this->table, array("orderStatus" => 4));
+        return $query->result_array();
+    }
+
+    public function getOrderCanceled() {
+        $query = $this->db->get_where($this->table, array("orderStatus" => 0));
         return $query->result_array();
     }
 }

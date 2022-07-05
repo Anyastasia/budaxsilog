@@ -119,7 +119,7 @@ $code = $this->session->userdata('codeC');
                     <h3 id="description" style="color: black;">Check Status:</h3>
                 </div>
                 <div class="row">
-                    <img id="imgL" src="<?=base_url()?>/imgs/logo.jpg" style="width: 300px; height:300px; display: none;">
+                    <img id="imgL" src="<?=base_url()?>/imgs/qr.jpg" style="width: 300px; height:300px; display: none;">
                 </div>
                 <div class="row" style="text-align: center; position: relative;">
                     <div class="col-9">

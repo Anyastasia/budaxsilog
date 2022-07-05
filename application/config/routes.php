@@ -58,6 +58,7 @@ $route['statusCheck'] = 'home/statusCheck';
 $route['checkoutOrder'] = 'home/checkoutOrder';
 $route['cancelOrder'] = 'home/cancelOrder';
 $route['orderlist/(:num)'] = 'orderlist/index/$1';
+$route['updateOrderStatus'] = 'orderlist/updateOrderStatus';
 $route['toggle'] = 'productlist/toggle';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

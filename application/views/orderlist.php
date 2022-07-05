@@ -5,10 +5,11 @@
         <div class="dropdown">
             <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Filter</button>
             <ul class="dropdown-menu">
-                <li><a href="<?= site_url('orderlist');?>" class="dropdown-item">All</a></li>
-                <li><a href="<?= site_url('orderlist/1');?>" class="dropdown-item">Pending Orders</a></li>
-                <li><a href="<?= site_url('orderlist/2');?>" class="dropdown-item">Pending Payments</a></li>
-                <li><a href="" class="dropdown-item"></a></li>
+                <li><a href="<?= site_url('orderlist/1');?>" class="dropdown-item">All</a></li>
+                <li><a href="<?= site_url('orderlist');?>" class="dropdown-item">Pending Orders</a></li>
+                <li><a href="<?= site_url('orderlist/2');?>" class="dropdown-item">Accepted Orders</a></li>
+                <li><a href="<?= site_url('orderlist/3');?>" class="dropdown-item">Delivered Orders</a></li>
+                <li><a href="<?= site_url('orderlist/4');?>" class="dropdown-item">Canceled Orders</a></li>
             </ul>
         </div>
         <table class="table table-striped text-white">
@@ -22,7 +23,6 @@
                     <th>Quantity</th>
                     <th>Code</th>
                     <th>Mode of Payment</th>
-                    <th>Payment Status</th>
                     <th>Order Status</th>
                     <th>Action</th>
                 </tr>
@@ -51,23 +51,49 @@
                         <?php } ?>
                         </td>
                         <td class="text-white"><?= $order["code"]; ?></td>
-                        <td <?php if($order["modeOfPayment"] == 0){ ?> >
+                        <td class="text-white" <?php if($order["modeOfPayment"] == 0){ ?> >
                             <p>GCash</p>
                         <?php } else { ?>
                             <p>Cash-on-Delivery</p>
                         <?php } ?> </td>
-                        <td <?php if($order["paymentStatus"] == 0){ ?> >
-                            <p>Pending</p>
-                        <?php } else { ?>
-                            <p>Paid</p>
-                        <?php } ?> </td>
-                        <?php if($order["orderStatus"] == 0) {?>
+                        <?php if ($order["orderStatus"] == NULL) {?>
                             <td><p>Pending</p></td>
-                            <td><button>Confirm</button></td>
+                            <?= form_open("updateOrderStatus") ?>
+                            <?= form_hidden('customerID', $order["customerID"]); ?>
+                            <td><button type="submit" value="<?=1?>" name="updateStatusButton">Confirm</button></td>
+                        <?= form_close() ?>
+                        <?php } elseif ($order["orderStatus"] == 0) {?>
+                            <td><p>Canceled</p></td>    
+                        <?php } elseif ($order["orderStatus"] == 1) {?>
+                            <td><p>Accepted</p></td>
+                        <?= form_open("updateOrderStatus") ?>
+                            <?= form_hidden('customerID', $order["customerID"]); ?>
+                            <td><button type="submit" value="<?=2?>" name="updateStatusButton">Ready</button></td>
+                        <?= form_close() ?>
+                        <?php } elseif ($order["orderStatus"] == 2) {?>
+                            <td><p>Ready</p></td>
+                            <?= form_open("updateOrderStatus") ?>
+                            <?= form_hidden('customerID', $order["customerID"]); ?>
+                            <td><button type="submit" value="<?=3?>" name="updateStatusButton">In transit</button></td>
+                        <?= form_close() ?>
+                        <?php } elseif ($order["orderStatus"] == 3) {?>
+                            <td><p>In transit</p></td>
+                            <?= form_open("updateOrderStatus") ?>
+                            <?= form_hidden('customerID', $order["customerID"]); ?>
+                            <td><button type="submit" value="<?=4?>" name="updateStatusButton">Delivered</button></td>
+                        <?= form_close() ?>
                         <?php } else { ?>
-                            <td><p>Confirmed</p></td>
-                            <td><button disabled>Confirm</button></td>
-                        <?php } ?>                           
+                            <td><p>Delivered</p></td>
+                        <?php } ?>
+                        <?php if (($order["orderStatus"] >= 1 && $order["orderStatus"] <= 3) || $order["orderStatus"] == NULL) {?>
+                        <?= form_open("updateOrderStatus") ?>
+                            <?= form_hidden('customerID', $order["customerID"]); ?>
+                            <td><button class="btn btn-danger" type="submit" value="<?=0?>" name="updateStatusButton">Cancel</button></td>
+                        <?= form_close() ?>
+                        <?php } else { ?>
+                            <td></td>
+                            <td></td>
+                        <?php } ?>
                     </tr>
                 <?php }?>
             </tbody>
